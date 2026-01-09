@@ -18,6 +18,7 @@
 // ＋ 盤外アクセス防止
 // ＋ パス処理（操作不能バグ修正）
 // ＋ ゲーム開始前：初期4石クリックでアクセント循環（★変更）
+// ＋ ★スマホ対応：Canvas表示縮小に対する座標補正 & pointer操作
 // =========================================================
 
 
@@ -28,7 +29,7 @@ const canvas = document.getElementById("board");
 const ctx = canvas.getContext("2d");
 
 const SIZE = 8;
-const CELL = 60;
+const CELL = 60; // 内部解像度は 8*60=480 固定
 
 
 // =====================
@@ -151,6 +152,27 @@ function inBounds(x, y) {
 function getBase(x, y) {
   if (!inBounds(x, y)) return 0;
   return board[y][x] ? board[y][x].base : 0;
+}
+
+
+// =====================
+// ★スマホ対応：Canvas表示縮小に対する座標補正
+// =====================
+//
+// CSSで canvas を縮小すると、見た目と内部(480x480)がズレる。
+// rect.width を使って「内部座標への倍率」を計算して補正する。
+function getBoardXYFromClient(clientX, clientY) {
+  const r = canvas.getBoundingClientRect();
+
+  // 内部座標(480) / 表示サイズ(px) の倍率
+  const scale = (SIZE * CELL) / r.width;
+
+  const px = (clientX - r.left) * scale;
+  const py = (clientY - r.top) * scale;
+
+  const x = Math.floor(px / CELL);
+  const y = Math.floor(py / CELL);
+  return { x, y };
 }
 
 
@@ -477,8 +499,7 @@ function resolvePassAndGameOver(showAlert = true) {
 // UI
 // =====================
 
-// ★ Setup中はアクセントボタンを「選ぶ」だけにしてもよいが、
-// 今回の仕様では Setup中は初期石クリックで色が循環するため、
+// Setup中は初期石クリックで色が循環するため、
 // Setup中のボタン操作は混乱を避けるため無効にする（★変更）
 accentButtons.forEach((b) =>
   b.addEventListener("click", () => {
@@ -531,14 +552,15 @@ resetBtn.onclick = () => {
 
 
 // =====================
-// クリック
+// クリック（★pointer対応）
 // =====================
-canvas.addEventListener("click", async (e) => {
+canvas.addEventListener("pointerdown", async (e) => {
+  // タッチ時のスクロール等を抑える
+  e.preventDefault();
+
   if (isProcessing) return;
 
-  const r = canvas.getBoundingClientRect();
-  const x = Math.floor((e.clientX - r.left) / CELL);
-  const y = Math.floor((e.clientY - r.top) / CELL);
+  const { x, y } = getBoardXYFromClient(e.clientX, e.clientY);
   if (!inBounds(x, y)) return;
 
   // ★ Setupフェーズ：初期4石クリックで色循環
@@ -580,7 +602,7 @@ canvas.addEventListener("click", async (e) => {
   resolvePassAndGameOver(true);
 
   draw();
-});
+}, { passive: false }); // ★preventDefaultを効かせるため
 
 
 // =====================
@@ -637,9 +659,6 @@ async function runOTitleLoop() {
   }
 }
 
-//if (blinkO) setOColor("#000000");
-//runOTitleLoop();
-
 // --- 初期状態：黒で固定 ---
 if (blinkO) setOColor("#000000");
 
@@ -647,3 +666,4 @@ if (blinkO) setOColor("#000000");
 setTimeout(() => {
   runOTitleLoop();
 }, 15000);
+
