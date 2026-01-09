@@ -7,7 +7,7 @@ body {
 
   background-color: rgb(152, 152, 152);
 
-  /* ハニカム背景（維持） */
+  /* ハニカム背景（完全維持） */
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='120' viewBox='0 0 104 120'%3E%3Cg fill='none' stroke='%23d6d6d6' stroke-width='1'%3E%3Cpath d='M52 2 L102 32 L102 88 L52 118 L2 88 L2 32 Z'/%3E%3C/g%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='120' viewBox='0 0 104 120'%3E%3Cg fill='none' stroke='%23d6d6d6' stroke-width='1'%3E%3Cpath d='M52 2 L102 32 L102 88 L52 118 L2 88 L2 32 Z'/%3E%3C/g%3E%3C/svg%3E");
@@ -27,7 +27,7 @@ h1 {
 }
 
 /* =========================================================
-   UI（PC維持）
+   UI（PCは元のまま）
    ========================================================= */
 #ui {
   display: flex;
@@ -135,11 +135,9 @@ label {
 }
 
 /* =========================================================
-   盤面（PC：そのまま）
+   盤面（CSSでは中央を決めない）
    ========================================================= */
 #boardWrap {
-  display: flex;
-  justify-content: center;
   width: 100%;
 }
 
@@ -149,7 +147,7 @@ label {
   display: block;
 
   width: 480px;
-  max-width: 92vw;
+  max-width: 100%;
   height: auto;
   margin: 12px 0;
 
@@ -161,7 +159,7 @@ label {
 }
 
 /* =========================================================
-   スマホ専用（<=600px）★ズレ完全解消ゾーン
+   スマホ（<=600px）
    ========================================================= */
 @media (max-width: 600px) {
 
@@ -186,18 +184,4 @@ label {
   #panelBlack  { order: 2; }
   #boardWrap   { order: 3; }
   #panelWhite  { order: 4; }
-
-  /* ★ここが最重要：vw を使わない */
-  #boardWrap {
-    width: 100%;
-    padding-left: 12px;
-    padding-right: 12px;
-    box-sizing: border-box;
-  }
-
-  #board {
-    width: 100%;
-    max-width: none;   /* vw 完全排除 */
-    height: auto;
-  }
 }
