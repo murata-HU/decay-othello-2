@@ -14,20 +14,34 @@ body {
 }
 
 /* ===== タイトル ===== */
-h1 {
+.title {
   text-align: center;
   margin-bottom: 12px;
 }
 
+/* 日本語：常に1塊 */
 .title-ja {
-  display: block;
-}
-
-.title-en {
-  display: inline-block;
   white-space: nowrap;
 }
 
+/* 英語：途中改行禁止 */
+.title-en {
+  white-space: nowrap;
+}
+
+/* 改行ダミー：PCでは無効 */
+.title-br {
+  display: none;
+}
+
+/* スマホだけ必ず2行 */
+@media (max-width: 600px) {
+  .title-br {
+    display: block;
+  }
+}
+
+/* ===== タイトル内 o ===== */
 #blinkO {
   transition: opacity 0.08s linear;
 }
@@ -160,7 +174,7 @@ label {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ===== スマホ ===== */
+/* ===== スマホUI ===== */
 @media (max-width: 600px) {
   body {
     margin-top: 12px;
