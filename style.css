@@ -7,7 +7,7 @@ body {
 
   background-color: rgb(152, 152, 152);
 
-  /* ハニカム背景（完全維持） */
+  /* ハニカム背景（維持） */
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='120' viewBox='0 0 104 120'%3E%3Cg fill='none' stroke='%23d6d6d6' stroke-width='1'%3E%3Cpath d='M52 2 L102 32 L102 88 L52 118 L2 88 L2 32 Z'/%3E%3C/g%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='120' viewBox='0 0 104 120'%3E%3Cg fill='none' stroke='%23d6d6d6' stroke-width='1'%3E%3Cpath d='M52 2 L102 32 L102 88 L52 118 L2 88 L2 32 Z'/%3E%3C/g%3E%3C/svg%3E");
@@ -15,15 +15,11 @@ body {
   background-repeat: repeat, repeat;
   background-position: 0 0, 52px 90px;
   background-size: 104px 180px, 104px 180px;
-
-  /* iOS セーフエリア対策（左右完全対称） */
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
 }
 
 /* タイトル */
 h1 {
-  text-align: center; /* 文字だけ中央 */
+  text-align: center;
 }
 
 #blinkO {
@@ -31,7 +27,7 @@ h1 {
 }
 
 /* =========================================================
-   UI
+   UI（PC維持）
    ========================================================= */
 #ui {
   display: flex;
@@ -59,9 +55,7 @@ h1 {
   margin-bottom: 8px;
 }
 
-/* =========================================================
-   アクセント選択（ボタンのみ）
-   ========================================================= */
+/* アクセントボタン */
 #playerPalette {
   display: flex;
   justify-content: center;
@@ -82,9 +76,7 @@ h1 {
   outline: 3px solid #666;
 }
 
-/* =========================================================
-   Controls
-   ========================================================= */
+/* Controls */
 label {
   font-size: 14px;
   margin-left: 8px;
@@ -99,9 +91,7 @@ label {
   margin-top: 10px;
 }
 
-/* =========================================================
-   Player panels
-   ========================================================= */
+/* Player panels */
 .player-panel {
   width: 220px;
   border: 2px solid #333;
@@ -145,27 +135,24 @@ label {
 }
 
 /* =========================================================
-   盤面（絶対中央固定）
+   盤面（PC：そのまま）
    ========================================================= */
-
-/* 盤面の基準点はここ1つだけ */
 #boardWrap {
   display: flex;
-  justify-content: center;   /* ← 数学的に中央 */
+  justify-content: center;
   width: 100%;
 }
 
-/* canvas はサイズだけを持つ */
 #board {
   border: 3px solid #333;
   cursor: pointer;
   display: block;
 
-  width: min(92vw, 480px);
+  width: 480px;
+  max-width: 92vw;
   height: auto;
   margin: 12px 0;
 
-  /* iOS 操作安定化 */
   touch-action: none;
   -webkit-user-select: none;
   user-select: none;
@@ -174,9 +161,10 @@ label {
 }
 
 /* =========================================================
-   スマホ（<=600px）
+   スマホ専用（<=600px）★ズレ完全解消ゾーン
    ========================================================= */
 @media (max-width: 600px) {
+
   body {
     margin-top: 12px;
   }
@@ -187,60 +175,29 @@ label {
     gap: 12px;
   }
 
-  #centerPanel {
-    min-width: auto;
-    width: min(92vw, 520px);
-  }
-
+  #centerPanel,
   .player-panel {
-    width: min(92vw, 520px);
+    width: 100%;
+    max-width: 520px;
   }
 
-  .accent-btn {
-    padding: 10px 14px;
-    font-size: 16px;
-  }
-
-  #controls button {
-    padding: 10px 16px;
-    font-size: 16px;
-  }
-
-  /* 並び順：黒 → 盤面 → 白 */
+  /* 並び順 */
   #centerPanel { order: 1; }
   #panelBlack  { order: 2; }
   #boardWrap   { order: 3; }
   #panelWhite  { order: 4; }
 
-  /* スマホでは盤面を横幅いっぱい */
+  /* ★ここが最重要：vw を使わない */
+  #boardWrap {
+    width: 100%;
+    padding-left: 12px;
+    padding-right: 12px;
+    box-sizing: border-box;
+  }
+
   #board {
     width: 100%;
+    max-width: none;   /* vw 完全排除 */
+    height: auto;
   }
 }
-
-/* =========================================================
-   中間サイズ（601–900px）
-   折り返し事故防止
-   ========================================================= */
-@media (min-width: 601px) and (max-width: 900px) {
-  #ui {
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-  }
-
-  #centerPanel {
-    min-width: auto;
-    width: min(92vw, 520px);
-  }
-
-  .player-panel {
-    width: min(92vw, 520px);
-  }
-
-  #centerPanel { order: 1; }
-  #panelBlack  { order: 2; }
-  #boardWrap   { order: 3; }
-  #panelWhite  { order: 4; }
-}
-
