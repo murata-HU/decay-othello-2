@@ -9,7 +9,10 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>壊変オセロ decay <span id="blinkO">o</span>thello</h1>
+  <h1>
+    壊変オセロ
+    <span class="title-en">decay <span id="blinkO">o</span>thello</span>
+  </h1>
 
   <div id="ui">
     <!-- 先手（Black） -->
@@ -26,7 +29,6 @@
         </div>
         <div id="turnText">Turn: Black</div>
 
-        <!-- ★アクセント選択：ボタンのみ -->
         <div id="playerPalette">
           <button class="accent-btn" data-accent="red">Red</button>
           <button class="accent-btn" data-accent="yellow">Yellow</button>
@@ -51,9 +53,8 @@
       <div class="counts" id="countsWhite"></div>
     </div>
 
-    <!-- ★盤面：スマホ時の並び替え用ラッパ -->
+    <!-- 盤面 -->
     <div id="boardWrap">
-      <!-- ★内部解像度は固定(480×480)、表示サイズのみCSSで制御 -->
       <canvas id="board" width="480" height="480"></canvas>
     </div>
   </div>
@@ -61,4 +62,3 @@
   <script src="main.js"></script>
 </body>
 </html>
-
