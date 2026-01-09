@@ -1,146 +1,55 @@
-body {
-    font-family: sans-serif;
-    text-align: center;
-    margin-top: 20px;
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <!-- ★スマホでの表示崩れ防止 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
-    /*ここに「白 + 灰色線の六角形が無限に続く背景」を追加 */
-    /*
-    background-color: #ffffff;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='120' viewBox='0 0 104 120'%3E%3Cg fill='none' stroke='%23d6d6d6' stroke-width='1'%3E%3Cpath d='M52 2 L102 32 L102 88 L52 118 L2 88 L2 32 Z'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 104px 120px;
-    background-repeat: repeat;
-    */
-    background-color: rgb(152, 152, 152);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='120' viewBox='0 0 104 120'%3E%3Cg fill='none' stroke='%23d6d6d6' stroke-width='1'%3E%3Cpath d='M52 2 L102 32 L102 88 L52 118 L2 88 L2 32 Z'/%3E%3C/g%3E%3C/svg%3E");
-    background-size: 104px 120px;
-    /* 同じSVGを2重に並べ、2つ目を半分ずらしてハニカムにする */
-    background-image:
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='120' viewBox='0 0 104 120'%3E%3Cg fill='none' stroke='%23d6d6d6' stroke-width='1'%3E%3Cpath d='M52 2 L102 32 L102 88 L52 118 L2 88 L2 32 Z'/%3E%3C/g%3E%3C/svg%3E"),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='120' viewBox='0 0 104 120'%3E%3Cg fill='none' stroke='%23d6d6d6' stroke-width='1'%3E%3Cpath d='M52 2 L102 32 L102 88 L52 118 L2 88 L2 32 Z'/%3E%3C/g%3E%3C/svg%3E");
-    background-repeat: repeat, repeat;
-    /* 
-    2つめを右に半分(52px)・下に半分(90px)ずらす
-    ここの2行の数字をいじって微調整して今がある！！もっと最適化できる！！
-    */
-    background-position: 0 0, 52px 90px;  
-    background-size: 104px 180px, 104px 180px;
-}
+  <title>decay othello</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>壊変オセロ decay <span id="blinkO">o</span>thello</h1>
 
-/*すぐ消すかも*/
-#blinkO {
-  transition: opacity 0.08s linear;
-}
-/*
-#blinkO{
-  transition: color 0.12s linear, text-shadow 0.12s linear;
-}
-*/
+  <div id="ui">
+    <div id="panelBlack" class="player-panel">
+      <div class="panel-title">先手（Black）</div>
+      <div class="counts" id="countsBlack"></div>
+    </div>
 
-#board {
-    border: 3px solid #333;
-    cursor: pointer;
-    display: block;
-    margin: 12px auto;
-}
+    <div id="centerPanel">
+      <div id="info">
+        <div id="phaseText">Setup: 初期の4つの駒をクリックして色を決めてください → Start</div>
+        <div id="turnText">Turn: Black</div>
 
-#ui {
-    display: flex;
-    justify-content: center;
-    gap: 18px;
-    align-items: flex-start;
-    flex-wrap: wrap;
-}
+        <div id="playerPalette">
+          <span>Choose accent to place:</span>
+          <button class="accent-btn" data-accent="red">Red</button>
+          <button class="accent-btn" data-accent="yellow">Yellow</button>
+          <button class="accent-btn" data-accent="green">Green</button>
+          <button class="accent-btn" data-accent="blue">Blue</button>
+        </div>
+      </div>
 
-#centerPanel {
-    min-width: 420px;
-}
+      <div id="controls">
+        <button id="startBtn">Start</button>
+        <button id="resetBtn">Reset</button>
+        <label><input type="checkbox" id="keepAccent"> Keep accent when flipped by opponent</label>
+      </div>
+    </div>
 
-#phaseText {
-    font-size: 14px;
-    margin-bottom: 6px;
-    padding: 6px 10px;
-    border: 1px solid #bbb;
-    background: #f7f7f7;
-    border-radius: 6px;
-}
+    <div id="panelWhite" class="player-panel">
+      <div class="panel-title">後手（White）</div>
+      <div class="counts" id="countsWhite"></div>
+    </div>
 
-#turnText {
-    font-weight: bold;
-    margin-bottom: 8px;
-}
+    <!-- ★追加：スマホ時だけ「黒→盤面→白」に並べるためのラッパ -->
+    <div id="boardWrap">
+      <!-- ★内部解像度は固定(480)のまま。表示だけCSSでフィットさせる -->
+      <canvas id="board" width="480" height="480"></canvas>
+    </div>
+  </div>
 
-#accentHint {
-    font-size: 12px;
-    color: #444;
-    margin-top: 6px;
-}
-
-.accent-btn {
-    margin: 0 4px;
-    padding: 6px 8px;
-    border: 1px solid #444;
-    background: #fff;
-    cursor: pointer;
-    border-radius: 6px;
-}
-
-.accent-btn.selected {
-    outline: 3px solid #666;
-}
-
-label {
-    font-size: 14px;
-    margin-left: 8px;
-}
-
-#controls {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 10px;
-}
-
-.player-panel {
-    width: 220px;
-    border: 2px solid #333;
-    border-radius: 10px;
-    padding: 10px 10px;
-    background: #fff;
-}
-
-.panel-title {
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-
-.counts {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 6px;
-    font-size: 14px;
-    text-align: left;
-}
-
-.count-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 8px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-}
-
-.badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 999px;
-    border: 1px solid #333;
-}
+  <script src="main.js"></script>
+</body>
+</html>
