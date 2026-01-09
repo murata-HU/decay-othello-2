@@ -5,7 +5,7 @@ body {
 
   background-color: rgb(152, 152, 152);
 
-  /* ハニカム背景（あなたの現状を保持） */
+  /* ハニカム背景（完全維持） */
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='120' viewBox='0 0 104 120'%3E%3Cg fill='none' stroke='%23d6d6d6' stroke-width='1'%3E%3Cpath d='M52 2 L102 32 L102 88 L52 118 L2 88 L2 32 Z'/%3E%3C/g%3E%3C/svg%3E"),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='104' height='120' viewBox='0 0 104 120'%3E%3Cg fill='none' stroke='%23d6d6d6' stroke-width='1'%3E%3Cpath d='M52 2 L102 32 L102 88 L52 118 L2 88 L2 32 Z'/%3E%3C/g%3E%3C/svg%3E");
@@ -15,26 +15,37 @@ body {
   background-size: 104px 180px, 104px 180px;
 }
 
-/*すぐ消すかも*/
+/* タイトルo */
 #blinkO {
   transition: opacity 0.08s linear;
 }
 
-/* ===== Canvas（スマホ対応の要点） ===== */
+/* =========================
+   Canvas（見た目はPC完全維持）
+   ========================= */
 #board {
   border: 3px solid #333;
   cursor: pointer;
   display: block;
   margin: 12px auto;
 
-  /* ★表示サイズだけを可変に（内部解像度480は固定） */
+  /* 表示サイズのみ可変（内部480固定） */
   width: min(92vw, 480px);
   height: auto;
 
-  /* ★タッチ時のスクロール/ズーム誤爆を抑える */
   touch-action: none;
 }
 
+/* ★中央ズレ完全解消用ラッパ */
+#boardWrap {
+  width: min(92vw, 480px);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* =========================
+   UI
+   ========================= */
 #ui {
   display: flex;
   justify-content: center;
@@ -61,14 +72,19 @@ body {
   margin-bottom: 8px;
 }
 
-#accentHint {
-  font-size: 12px;
-  color: #444;
+/* =========================
+   アクセントボタン（ボタンのみ）
+   ========================= */
+#playerPalette {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
   margin-top: 6px;
+  flex-wrap: wrap;
 }
 
 .accent-btn {
-  margin: 0 4px;
+  margin: 0;
   padding: 6px 8px;
   border: 1px solid #444;
   background: #fff;
@@ -80,6 +96,9 @@ body {
   outline: 3px solid #666;
 }
 
+/* =========================
+   Controls
+   ========================= */
 label {
   font-size: 14px;
   margin-left: 8px;
@@ -94,6 +113,9 @@ label {
   margin-top: 10px;
 }
 
+/* =========================
+   Player panels
+   ========================= */
 .player-panel {
   width: 220px;
   border: 2px solid #333;
@@ -137,7 +159,11 @@ label {
   border: 1px solid #333;
 }
 
-/* ===== スマホ用レイアウト（縦並び） ===== */
+/* =========================================================
+   スマホ（<=600px）
+   - 黒 → 盤面 → 白
+   - 盤面は横幅ギリギリ
+   ========================================================= */
 @media (max-width: 600px) {
   body {
     margin-top: 12px;
@@ -158,7 +184,6 @@ label {
     width: min(92vw, 520px);
   }
 
-  /* ボタンを押しやすく */
   .accent-btn {
     padding: 10px 14px;
     font-size: 16px;
@@ -169,21 +194,17 @@ label {
     font-size: 16px;
   }
 
-  /* =========================================================
-     ★スマホ時のみ：黒→盤面→白にして盤面を横幅ギリギリに
-     （canvasは #ui 内の #boardWrap に入っている前提）
-     ========================================================= */
+  /* 並び順 */
   #centerPanel { order: 1; }
   #panelBlack  { order: 2; }
   #boardWrap   { order: 3; }
   #panelWhite  { order: 4; }
 
+  /* 盤面は横幅いっぱい */
   #boardWrap {
     width: min(92vw, 520px);
-    margin: 0 auto;
   }
 
-  /* 盤面を横幅いっぱい（表示だけ） */
   #board {
     width: 100%;
     height: auto;
@@ -191,22 +212,16 @@ label {
 }
 
 /* =========================================================
-   ★中間サイズ対策（今回の修正点）
-   600pxを少し超えたあたりでflex-wrapが暴れてレイアウトが汚くなるのを防ぐ。
-   601〜900pxでは「スマホ寄りの縦並び」に倒して安定させる。
-   PC（901px以上）は一切変更しない。
+   中間サイズ（601–900px）
+   - 折り返し事故防止
    ========================================================= */
-
 @media (min-width: 601px) and (max-width: 900px) {
-
-  /* 折り返しレイアウトが不安定なので、ここでは縦に並べる */
   #ui {
     flex-direction: column;
     align-items: center;
     gap: 12px;
   }
 
-  /* 中央パネルの min-width:420 が中間幅で暴れるので、ここだけ緩める */
   #centerPanel {
     min-width: auto;
     width: min(92vw, 520px);
@@ -216,7 +231,6 @@ label {
     width: min(92vw, 520px);
   }
 
-  /* 黒→盤面→白の上下配置を維持 */
   #centerPanel { order: 1; }
   #panelBlack  { order: 2; }
   #boardWrap   { order: 3; }
@@ -224,14 +238,10 @@ label {
 
   #boardWrap {
     width: min(92vw, 520px);
-    margin: 0 auto;
-    max-width: 520px; /* 任意：微小なガタつき抑制 */
   }
 
-  /* 中間幅では“横幅いっぱい”にしない（PCとの差を小さくしつつ安定） */
   #board {
     width: min(92vw, 480px);
-    height: auto;
   }
 }
 
