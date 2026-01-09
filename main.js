@@ -667,3 +667,32 @@ setTimeout(() => {
   runOTitleLoop();
 }, 15000);
 
+// =========================================================
+// ★ iOS Safari 対策：盤面を実画面の中央に強制配置
+// =========================================================
+(function forceCenterBoardOnMobile() {
+  const wrap = document.getElementById("boardWrap");
+  const board = document.getElementById("board");
+  if (!wrap || !board) return;
+
+  function adjust() {
+    const viewportWidth = window.visualViewport
+      ? window.visualViewport.width
+      : window.innerWidth;
+
+    const boardWidth = board.getBoundingClientRect().width;
+    const pad = Math.max(0, (viewportWidth - boardWidth) / 2);
+
+    wrap.style.paddingLeft  = pad + "px";
+    wrap.style.paddingRight = pad + "px";
+  }
+
+  window.addEventListener("load", adjust);
+  window.addEventListener("resize", adjust);
+  window.addEventListener("orientationchange", adjust);
+
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", adjust);
+    window.visualViewport.addEventListener("scroll", adjust);
+  }
+})();
