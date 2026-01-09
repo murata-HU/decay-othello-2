@@ -2,26 +2,24 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
-  <!-- ★スマホでの表示崩れ防止 -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 
   <title>decay othello</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+
   <h1>
-    壊変オセロ
+    <span class="title-ja">壊変オセロ</span>
     <span class="title-en">decay <span id="blinkO">o</span>thello</span>
   </h1>
 
   <div id="ui">
-    <!-- 先手（Black） -->
     <div id="panelBlack" class="player-panel">
       <div class="panel-title">先手（Black）</div>
       <div class="counts" id="countsBlack"></div>
     </div>
 
-    <!-- 中央UI -->
     <div id="centerPanel">
       <div id="info">
         <div id="phaseText">
@@ -47,13 +45,11 @@
       </div>
     </div>
 
-    <!-- 後手（White） -->
     <div id="panelWhite" class="player-panel">
       <div class="panel-title">後手（White）</div>
       <div class="counts" id="countsWhite"></div>
     </div>
 
-    <!-- 盤面 -->
     <div id="boardWrap">
       <canvas id="board" width="480" height="480"></canvas>
     </div>
